@@ -1,0 +1,123 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html> -->
+<script>
+//     var arr=[1,2,3,4,5,6,7,8,9];
+//     r=arr.sort(function () {  
+//         return Math.random()>0.5?-1:1
+//     })
+//   console.log(r)
+    /*promise的基本用法
+    const promise=new Promise(function(resolve,reject) { 
+           
+            setTimeout(function() {
+                var n=Math.random();
+                console.log(n)
+                if(n>0.5){
+                    resolve(`{"status":0,message:"成功"}`)
+                }else{
+                    reject(`{"status":1,message:"失败"}`)
+                }
+            }, 3000);
+     })
+     promise.then(res=>{
+         console.log(res)
+     }).catch(err=>{
+         console.log(err)
+     })
+     **/
+    // 回调地狱 在异步操作中又嵌套异步操作，形成回调地狱
+    // setTimeout(function () { 
+    //     console.log("完成了一个操作")
+    //     setTimeout(function() {
+    //         console.log('完成了二个操作')
+    //         setTimeout(function() {
+    //            console.log( "完成了三个项目")
+    //         }, 3000);
+    //     }, 1000);
+    //  },2000)
+    // Promise解决回调地狱1
+    // const promise=new Promise(function (resolve,reject) { 
+    //     setTimeout(function() {
+    //         resolve("完成了1个操作1")
+    //     }, 2000);
+    //  })
+    // promise.then(res=>{
+    //     console.log(res)
+    //     const promise1=new Promise(function (resolve,reject) { 
+    //             setTimeout(function() {
+    //                 resolve("完成了2个操作1")
+    //             }, 1000);
+    //     })
+    //     promise1.then(res1=>{
+    //         console.log(res1)
+    //         const promise2=new Promise(function (resolve,reject) { 
+    //             setTimeout(function() {
+    //                 resolve('完成了3个操作1')
+    //             }, 1000);
+    //         })
+    //         promise2.then(res3=>{
+    //             console.log(res3)
+    //         })
+    //     })
+       
+    // })
+
+    // 最终改造 通过封装后进行
+    function setTimePromise(time,data){
+        const promise=new Promise((resolve,reject)=>{
+            setTimeout(function() {
+                resolve(data)
+            }, time)
+        })
+        return promise
+    }
+    setTimePromise(2000,"1次操作").then(res=>{
+        console.log(res)
+        return setTimePromise(3000,"2次操作")
+    }).then(res1=>{
+        console.log(res1)
+        return setTimePromise(1000,"3次操作")
+    }).then(res2=>{
+        console.log(res2)
+    })
+     
+
+    // async 异步操作解决回调地狱
+    function setTimePromise(time,data){
+        const promise=new Promise((resolve,reject)=>{
+            setTimeout(function() {
+                resolve(data)
+            }, time)
+        })
+        return promise
+    }
+    async function stepTime(){
+        // const result=await setTimePromise(2000,"1次操作");
+        // const result1 = await timeOutPromise(2000,"第一个请求完毕了async1...")
+        const result1 = await setTimePromise(2000,"第一个请求完毕了async1...")
+                    console.log(result1)
+
+                    const result2 = await setTimePromise(1000,"第二个请求完毕了async2...")
+                    console.log(result2)
+
+                    // const name = await returnName("小明")
+                    // console.log(name)
+
+                    const result3 = await setTimePromise(3000,"第三个请求完毕了async3...")
+                    console.log(result3)
+
+                    const result4 = await setTimePromise(1000,"第四个请求完毕了async4...")
+                    console.log(result4)
+    }
+    stepTime();
+</script>
